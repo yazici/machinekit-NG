@@ -68,7 +68,7 @@ else()
 endif()
 
 add_definitions(-DULAPI)
-set(NPB_DEFINITIONS PB_FIELD_32BIT PB_SYSTEM_HEADER=<pb-linuxcnc.h>)
+set(NPB_DEFINITIONS PB_FIELD_32BIT PB_SYSTEM_HEADER=<pb-machinekit.h>)
 
 add_subdirectory(machinetalk)
 add_subdirectory(libnml)
