@@ -12,23 +12,26 @@ set(PWD ${CMAKE_CURRENT_BINARY_DIR}/machinekit)
 
 add_library(cy_hal SHARED $<TARGET_OBJECTS:hal_obj>
     $<TARGET_OBJECTS:halcmd_rtapiapp>)
-target_link_libraries(cy_hal mkhal mtalk mk_rip)
+target_link_libraries(cy_hal mk_rip mkhal mtalk)
 set_target_properties(cy_hal PROPERTIES
     OUTPUT_NAME "hal"
     PREFIX "")
+cleanup_rpath_hack(cy_hal)
 
 add_library(cy_rtapi SHARED $<TARGET_OBJECTS:rtapi_obj>
     $<TARGET_OBJECTS:halcmd_rtapiapp>)
-target_link_libraries(cy_rtapi mkhal mtalk mk-pb2++ mk_rip)
+target_link_libraries(cy_rtapi mk_rip mkhal mtalk mk-pb2++)
 set_target_properties(cy_rtapi PROPERTIES
     OUTPUT_NAME "rtapi"
     PREFIX "")
+cleanup_rpath_hack(cy_rtapi)
 
 add_library(cy_compat SHARED $<TARGET_OBJECTS:compat_obj>)
-target_link_libraries(cy_compat mkhal mk_rip)
+target_link_libraries(cy_compat mk_rip mkhal)
 set_target_properties(cy_compat PROPERTIES
     OUTPUT_NAME "compat"
     PREFIX "")
+cleanup_rpath_hack(cy_compat)
 
 add_library(cy_shmcommon SHARED $<TARGET_OBJECTS:shmcommon_obj>
     $<TARGET_OBJECTS:shmdrvapi>)
@@ -36,6 +39,7 @@ target_link_libraries(cy_shmcommon mk_rip)
 set_target_properties(cy_shmcommon PROPERTIES
     OUTPUT_NAME "shmcommon"
     PREFIX "")
+cleanup_rpath_hack(cy_shmcommon)
 
 # copy all *.so on a separate directory so that the linker can strip the RPATH
 set(_dir ${PROJECT_PYTHON_DIR}/machinekit)

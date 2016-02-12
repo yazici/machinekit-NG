@@ -55,8 +55,9 @@ set_target_properties(_hal PROPERTIES
     INSTALL_RPATH_USE_LINK_PATH TRUE
     LIBRARY_OUTPUT_DIRECTORY ${halpy_dir}
     PREFIX "")
-target_link_libraries(_hal mkhal mk_rip ${PYTHON_LIBRARIES})
+target_link_libraries(_hal mk_rip mkhal ${PYTHON_LIBRARIES})
 add_dependencies(_hal halpy)
+cleanup_rpath_hack(_hal)
 
 # copy _hal on a separate directory so that the linker can strip the RPATH
 set(_CMD ${CMAKE_COMMAND} -E copy_directory ${halpy_dir} ${PROJECT_DIST_DIR}/hal)

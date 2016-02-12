@@ -25,6 +25,8 @@ set(RTAPI_XENOMAI_ID 2)
 set(RTAPI_XENOMAI_NAME "xenomai")
 set(XENOMAI_THREADS_SOURCE xenomai.c)
 
+include(RpathHack)
+
 include_directories(${INCLUDE_DIR})
 include_directories(${INCLUDE_DIR}/proto)
 

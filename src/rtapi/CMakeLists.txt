@@ -53,19 +53,6 @@ if(WITH_USERMODE_PCI)
     endif()
 endif()
 
-# this is a hack to allow RUN_IN_PLACE on the build directory
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/mk_rip.c "")
-add_library(mk_rip SHARED ${CMAKE_CURRENT_BINARY_DIR}/mk_rip.c)
-set_target_properties(mk_rip PROPERTIES 
-    LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIBEXEC_DIR})
-
-# set the RPATH for installed binaries, but only if it's not a system directory
-set(_rpath "${CMAKE_INSTALL_PREFIX}/lib/machinekit")
-list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" _res)
-if("${_res}" STREQUAL "-1")
-   set(_rpath  ${_rpath} "${CMAKE_INSTALL_PREFIX}/lib")
-endif()
-
 foreach(_flav ${BUILD_THREAD_FLAVORS})
     _flavor_helper(${_flav})
 
@@ -79,7 +66,8 @@ foreach(_flav ${BUILD_THREAD_FLAVORS})
     target_link_libraries(ulapi-${_fname} mkshm mkhal)
     if(${_flav} STREQUAL xenomai)
         set_target_properties(ulapi-${_fname} PROPERTIES 
-            COMPILE_FLAGS ${XENO_CFLAGS})
+            COMPILE_FLAGS ${XENO_CFLAGS}
+            LINK_FLAGS ${XENO_LDFLAGS})
         set(cflags "${cflags} ${XENO_CFLAGS}")
     endif()
 
@@ -91,7 +79,8 @@ foreach(_flav ${BUILD_THREAD_FLAVORS})
         OUTPUT_NAME "rtapi"
         PREFIX "")
     if(${_flav} STREQUAL xenomai)
-        set_target_properties(rtapi_${_fname} PROPERTIES LINK_FLAGS ${XENO_LDFLAGS})
+        set_target_properties(rtapi_${_fname} PROPERTIES 
+            LINK_FLAGS ${XENO_LDFLAGS})
     endif()
     if(WITH_USERMODE_PCI)
         target_link_libraries(rtapi_${_fname} ${UDEV_LIBRARIES})
@@ -106,14 +95,19 @@ foreach(_flav ${BUILD_THREAD_FLAVORS})
         COMPILE_DEFINITIONS RTAPI
         COMPILE_FLAGS -UULAPI
         RUNTIME_OUTPUT_DIRECTORY ${PROJECT_LIBEXEC_DIR})
-    # link with rtapi_${_fname} to allow RUN_IN_PLACE
-    target_link_libraries(rtapi_app_${_fname} mkini mkshm mtalk rtapi_math 
-        mk-pb2++ ${CMAKE_DL_LIBS} rtapi_${_fname} mk_rip)
+    target_link_libraries(rtapi_app_${_fname} mk_rip mk_rip.${_fname} mkini 
+        mkshm mtalk rtapi_math mk-pb2++ ${CMAKE_DL_LIBS})
+    if(${_flav} STREQUAL xenomai)
+        set_target_properties(rtapi_app_${_fname} PROPERTIES 
+            LINK_FLAGS ${XENO_LDFLAGS})
+    endif()
+    cleanup_rpath_hack(rtapi_app_${_fname})
+
     set(SETUID_DEPS ${SETUID_DEPS} rtapi_app_${_fname})
 
     _install_exec(rtapi_${_fname} ${_fname})
     _install_exec_setuid(rtapi_app_${_fname})
-    set(target-exec ${target-exec} ulapi-${_fname})
+    _install_exec(ulapi-${_fname})
 endforeach()
 
 add_custom_target(setuid 
@@ -127,5 +121,4 @@ install(FILES rsyslogd-machinekit.conf
     DESTINATION ${INSTALL_SYSCONF_DIR}/rsyslog.d
     RENAME machinekit.conf)
 
-set(target-exec ${target-exec} rtapi_msgd flavor mk_rip)
-_install_exec("${target-exec}")
+_install_exec("rtapi_msgd;flavor")
