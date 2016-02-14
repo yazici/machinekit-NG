@@ -3,8 +3,6 @@ set_target_properties(cubic PROPERTIES
     COMPILE_FLAGS -UULAPI
     COMPILE_DEFINITIONS "RTAPI;THREAD_FLAVOR_ID=0")
 
-unset(target-exec)
-
 _to_rtlib(trivkins trivkins.c)
 _to_rtlib(5axiskins 5axiskins.c)
 _to_rtlib(maxkins maxkins.c)
@@ -21,5 +19,3 @@ endforeach()
 
 set(_src genserkins.c $<TARGET_OBJECTS:gomath>)
 _to_rtlib(genserkins ${_src})
-
-_install_exec("${target-exec}")

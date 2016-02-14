@@ -1,4 +1,3 @@
-unset(target-exec)
 _to_rtlib(hm2_eth hm2_eth.c)
 
 set(SRC hm2_7i90 hm2_7i43 hm2_pci hm2_test)
@@ -29,4 +28,3 @@ set(hostmot2_src
     watchdog.c)
 
 _to_rtlib(hostmot2 ${hostmot2_src})
-_install_exec("${target-exec}")

@@ -1,8 +1,10 @@
 add_executable(halstreamer streamer_usr.c)
 target_link_libraries(halstreamer mkhal)
+_install(halstreamer)
 
 add_executable(halsampler sampler_usr.c)
 target_link_libraries(halsampler mkhal)
+_install(halsampler)
 
 # get local comps
 file(GLOB files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.comp")
@@ -27,7 +29,7 @@ foreach(file ${_gen_comp})
     _comp_to_man(${name} ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
 add_custom_target(man_conv ALL DEPENDS ${_gen_man})
-set(target-man ${_gen_man})
+_install_man("${_gen_man}")
 
 unset(_gen_man)
 # create manpages
@@ -36,7 +38,7 @@ foreach(file ${files})
     _comp_to_man(${name})
 endforeach()
 add_custom_target(man_components ALL DEPENDS ${_gen_man})
-set(target-man ${target-man} ${_gen_man})
+_install_man("${_gen_man}")
 
 unset(_gen_c)
 # generate c from comps
@@ -51,7 +53,6 @@ foreach(file ${files})
     _comp_to_c(${name})
 endforeach()
 
-unset(target-exec)
 # create targets from generated c files
 foreach(file ${_gen_c})
     get_filename_component(name ${file} NAME_WE)
@@ -90,8 +91,3 @@ if(WITH_TARGET_PLATFORM_BEAGLEBONE)
     endforeach()
     _to_rtlib(pepper pepper.c)
 endif()
-
-set(target halstreamer halsampler)
-_install("${target}")
-_install_exec("${target-exec}")
-_install_man("${target-man}")

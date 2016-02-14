@@ -38,15 +38,17 @@ foreach(file ${COMP_SRC})
     _comp_to_c(${file})
 endforeach()
 
-unset(target-exec)
 # create targets from generated c files
 foreach(file ${_gen_c})
     get_filename_component(name ${file} NAME_WE)
     _to_rtlib(${name} ${file})
 endforeach()
 
-add_dependencies(pluto_servo pluto_servo_rbf)
-add_dependencies(pluto_step pluto_step_rbf)
+foreach(_flav ${BUILD_THREAD_FLAVORS})
+    _flavor_helper(${_flav})
+    add_dependencies(pluto_servo.${_fname} pluto_servo_rbf)
+    add_dependencies(pluto_step.${_fname} pluto_step_rbf)
+endforeach()
 
 unset(_gen_man)
 # create manpages
@@ -55,6 +57,7 @@ foreach(file ${COMP_SRC})
 endforeach()
 
 add_custom_target(man_drivers ALL DEPENDS ${_gen_man})
+_install_man("${_gen_man}")
 
 _to_rtlib(hal_parport hal_parport.c)
 _to_rtlib(pci_8255 pci_8255.c)
@@ -84,6 +87,3 @@ if(WITH_TARGET_PLATFORM_ZEDBOARD)
     _to_rtlib(hal_zed_gpio hal_zed_gpio.c)
     _to_rtlib(hal_zed_can hal_zed_can.c)
 endif()
-
-_install_exec("${target-exec}")
-_install_man("${_gen_man}")

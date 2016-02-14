@@ -7,7 +7,6 @@ foreach(file ${files})
     _icomp_to_c(${name})
 endforeach()
 
-unset(target-exec)
 # create targets from generated c files
 foreach(file ${_gen_c})
     get_filename_component(name ${file} NAME_WE)
@@ -21,6 +20,4 @@ foreach(file ${files})
     _icomp_to_man(${name})
 endforeach()
 add_custom_target(man_i_components ALL DEPENDS ${_gen_man})
-
-_install_exec("${target-exec}")
 _install_man("${_gen_man}")

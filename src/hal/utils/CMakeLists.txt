@@ -14,9 +14,13 @@ set_target_properties(halcmd PROPERTIES
     INSTALL_RPATH "${_rpath}"
     INSTALL_RPATH_USE_LINK_PATH TRUE)
 cleanup_rpath_hack(halcmd)
+_install(halcmd)
 
 add_executable(pci_write pci_write.c upci.c)
+_install(pci_write)
+
 add_executable(pci_read pci_read.c upci.c)
+_install(pci_read)
 
 foreach(util comp instcomp)
     set(src ${CMAKE_CURRENT_SOURCE_DIR}/${util}.g)
@@ -33,6 +37,7 @@ add_executable(halmeter meter.c miscgtk.c)
 set_property(TARGET halmeter APPEND PROPERTY 
     INCLUDE_DIRECTORIES "${GTK2_INCLUDE_DIRS}")
 target_link_libraries(halmeter mkhal ${GTK2_LIBRARIES})
+_install(halmeter)
 
 set(HALSCOPE_SRCS
     scope.c
@@ -47,11 +52,9 @@ add_executable(halscope ${HALSCOPE_SRCS})
 set_property(TARGET halscope APPEND PROPERTY
     INCLUDE_DIRECTORIES "${GTK2_INCLUDE_DIRS}")
 target_link_libraries(halscope mkhal rtapi_math ${GTK2_LIBRARIES})
+_install(halscope)
 
 _to_rtlib(scope_rt scope_rt.c)
-_install_exec(scope_rt)
 
 # fixme
 # set_property(GLOBAL APPEND PROPERTY target-dev pyhal_utils)
-set(target halcmd pci_write pci_read halmeter halscope)
-_install("${target}")
