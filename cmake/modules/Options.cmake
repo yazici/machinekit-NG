@@ -11,6 +11,7 @@ else()
     set(BUILD_THREAD_FLAVORS posix rt_preempt xenomai)
     set(XENOMAI_SKIN native)
     set(with_xenomai "define")
+    unset(ENV{DESTDIR})
     execute_process(COMMAND ${XENO_CONFIG} --skin ${XENOMAI_SKIN} --cflags
                     OUTPUT_VARIABLE XENO_CFLAGS
                     OUTPUT_STRIP_TRAILING_WHITESPACE)
