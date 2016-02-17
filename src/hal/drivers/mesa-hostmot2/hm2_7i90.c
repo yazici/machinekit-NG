@@ -27,9 +27,9 @@
 
 #include "hal.h"
 
-#include "hal/drivers/mesa-hostmot2/bitfile.h"
-#include "hal/drivers/mesa-hostmot2/hostmot2-lowlevel.h"
-#include "hal/drivers/mesa-hostmot2/hm2_7i90.h"
+#include "bitfile.h"
+#include "hostmot2-lowlevel.h"
+#include "hm2_7i90.h"
 
 
 static int comp_id;
@@ -369,4 +369,3 @@ void rtapi_app_exit(void) {
     hal_exit(comp_id);
     LL_PRINT("driver unloaded\n");
 }
-
