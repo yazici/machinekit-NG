@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+# This script will install the python module $1, from source $2, 
+# to destination $3.
+# If run from Cpack, the setup.py will just be copied to the installation dir.
+# $4 is the python executable and $5 is the installation prefix
+
+if [ "x$1" != "x" ] && [ "x$2" != "x" ] && [ "x$3" != "x" ]; then
+    # check if we're packaging or installing
+    if [[ $DESTDIR == *_CPack_Packages* ]]; then
+        # update setup.py setup.py just needs to be copied
+        if [ -f $2.setup.py ]; then
+            echo updating $1.setup.py
+            sed "s~_DESTDIR_~~g" $2.setup.py > $DESTDIR/$3/$1.setup.py
+        fi
+    else
+        # run setup script
+        if [ -f $2.setup.py ]; then
+            echo installing $1.setup.py
+            sed "s~_DESTDIR_~$DESTDIR~g" $2.setup.py > $DESTDIR/$3/$1.setup.py
+            $4 $DESTDIR/$3/$1.setup.py install --prefix $DESTDIR/$5
+            rm -rf $DESTDIR/$3/$1.setup.py
+        fi
+    fi
+fi

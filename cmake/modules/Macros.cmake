@@ -199,12 +199,25 @@ macro(_install_script SRC)
         DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 endmacro()
 
-macro(_install_py)
-    set(SETUP_PY "${CMAKE_CURRENT_BINARY_DIR}/setup.py")
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in ${SETUP_PY})
-    set(INSTALL_CMD 
-        ${PYTHON_EXECUTABLE} ${SETUP_PY} install --prefix ${CMAKE_INSTALL_PREFIX})
-    install(CODE "execute_process(COMMAND ${INSTALL_CMD})")
+#! _install_py
+#
+# \arg:NAME python module name
+# \arg:ARGN python targets
+#
+macro(_install_py NAME)
+    set(_src ${PROJECT_PYTHON_DIR}/${NAME})
+    set(_dst ${INSTALL_PYSHARED_DIR})
+    install(DIRECTORY ${_src} DESTINATION ${_dst} 
+        FILES_MATCHING PATTERN "*.py"
+    PATTERN "nosetests" EXCLUDE)
+    install(TARGETS ${ARGN}
+        DESTINATION ${INSTALL_PYSHARED_DIR}/${NAME})
+    set(_setup "${_src}.setup.py")
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in ${_setup})
+    install(CODE "execute_process(COMMAND 
+        ${SCRIPTS_DIR}/python_package_helper 
+            ${NAME} ${_src} ${_dst} 
+            ${PYTHON_EXECUTABLE} ${CMAKE_INSTALL_PREFIX})")
 endmacro()
 # *** _install ***
 
@@ -217,7 +230,7 @@ endmacro()
 # \arg:DST output destination directory
 # \arg:EXT output extension
 # \arg:SDIR source destination directory
-# \arg:SRC python source file/s
+# \arg:ARGN python source file/s
 #
 macro(add_python_target TGT DST EXT SDIR)
     unset(_out_files)

@@ -41,10 +41,4 @@ set_target_properties(cy_shmcommon PROPERTIES
     PREFIX "")
 cleanup_rpath_hack(cy_shmcommon)
 
-# copy all *.so on a separate directory so that the linker can strip the RPATH
-set(_dir ${PROJECT_PYTHON_DIR}/machinekit)
-set(_CMD ${CMAKE_COMMAND} -E copy_directory ${_dir} ${PROJECT_DIST_DIR}/machinekit)
-install(CODE "execute_process(COMMAND ${_CMD})")
-install(TARGETS cy_hal cy_rtapi cy_compat cy_shmcommon
-    DESTINATION ${PROJECT_DIST_DIR}/machinekit)
-_install_py()
+_install_py(machinekit cy_hal cy_rtapi cy_compat cy_shmcommon)
