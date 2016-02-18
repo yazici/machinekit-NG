@@ -116,8 +116,8 @@ add_custom_target(setuid
     WORKING_DIRECTORY ${PROJECT_LIBEXEC_DIR}
     VERBATIM)
 
-install(FILES rsyslogd-machinekit.conf
-    DESTINATION ${INSTALL_SYSCONF_DIR}/rsyslog.d
-    RENAME machinekit.conf)
-
 _install_exec("rtapi_msgd;flavor")
+
+install(FILES rsyslogd-machinekit.conf
+    DESTINATION /etc/rsyslog.d
+    RENAME machinekit.conf)

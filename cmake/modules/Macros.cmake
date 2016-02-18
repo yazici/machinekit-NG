@@ -191,12 +191,12 @@ endmacro()
 
 macro(_install_man SRC)
     install(FILES ${SRC} 
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man9)
+        DESTINATION man/man9)
 endmacro()
 
 macro(_install_script SRC)
     install(PROGRAMS ${SRC} 
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+        DESTINATION bin)
 endmacro()
 
 #! _install_py
@@ -207,17 +207,17 @@ endmacro()
 macro(_install_py NAME)
     set(_src ${PROJECT_PYTHON_DIR}/${NAME})
     set(_dst ${INSTALL_PYSHARED_DIR})
-    install(DIRECTORY ${_src} DESTINATION ${_dst} 
+    install(DIRECTORY ${_src} DESTINATION share/pyshared
         FILES_MATCHING PATTERN "*.py"
     PATTERN "nosetests" EXCLUDE)
     install(TARGETS ${ARGN}
-        DESTINATION ${INSTALL_PYSHARED_DIR}/${NAME})
+        DESTINATION share/pyshared/${NAME})
     set(_setup "${_src}.setup.py")
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in ${_setup})
     install(CODE "execute_process(COMMAND 
         ${SCRIPTS_DIR}/python_package_helper 
             ${NAME} ${_src} ${_dst} 
-            ${PYTHON_EXECUTABLE} ${CMAKE_INSTALL_PREFIX})")
+        ${PYTHON_EXECUTABLE} ${CMAKE_INSTALL_PREFIX} ${CPACK_PACKAGING_INSTALL_PREFIX})")
 endmacro()
 # *** _install ***
 

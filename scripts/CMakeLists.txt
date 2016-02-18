@@ -29,17 +29,17 @@ configure_file("realtime.in" "realtime.dist" @ONLY)
 configure_file("halrun.in" "halrun.dist" @ONLY)
 
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/realtime.dist 
-    DESTINATION ${PROJECT_BIN_DIR}
+    DESTINATION bin
     RENAME realtime)
 
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/halrun.dist 
-    DESTINATION ${PROJECT_BIN_DIR}
+    DESTINATION bin
     RENAME halrun)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/rtapi.ini.dist 
-    DESTINATION ${PROJECT_SYSCONF_DIR}/machinekit
+    DESTINATION /etc/machinekit
     RENAME rtapi.ini)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/machinekit.ini.dist 
-    DESTINATION ${PROJECT_SYSCONF_DIR}/machinekit
+    DESTINATION /etc/machinekit
     RENAME machinekit.ini)
