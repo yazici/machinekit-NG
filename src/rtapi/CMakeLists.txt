@@ -45,6 +45,17 @@ set(RTAPI_SRC ${XXAPI_COMMON_SRCS}
     rtapi_main.c rtapi_support.c rtapi_hexdump.c rtapi_compat.c
     $<TARGET_OBJECTS:rtapi_heap> $<TARGET_OBJECTS:nanopb>)
 
+add_library(mkulapi SHARED $<TARGET_OBJECTS:ulapi_autoload>
+    $<TARGET_OBJECTS:rtapi_compat> $<TARGET_OBJECTS:rtapi_support>)
+set_target_properties(mkulapi PROPERTIES
+    BUILD_WITH_INSTALL_RPATH FALSE
+    INSTALL_RPATH "${_rpath}"
+    INSTALL_RPATH_USE_LINK_PATH TRUE
+    VERSION ${GENERIC_LIB_VERSION})
+target_link_libraries(mkulapi mk_rip mkini mkshm)
+cleanup_rpath_hack(mkulapi)
+_install(mkulapi)
+
 set(cflags "-UULAPI")
 if(WITH_USERMODE_PCI)
     set(RTAPI_SRC ${RTAPI_SRC} rtapi_pci.c)
@@ -60,27 +71,20 @@ foreach(_flav ${BUILD_THREAD_FLAVORS})
         $<TARGET_OBJECTS:rtapi_heap> $<TARGET_OBJECTS:rtapi_support>)
     set_target_properties(ulapi-${_fname} PROPERTIES 
         COMPILE_DEFINITIONS "THREAD_FLAVOR_ID=${RTAPI_${_FLAV}_ID}"
+        COMPILE_FLAGS "${${_FLAV}_THREADS_RTFLAGS}"
         LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIBEXEC_DIR}
+        LINK_FLAGS "${${_FLAV}_THREADS_LDFLAGS}"
         PREFIX "")
     target_link_libraries(ulapi-${_fname} mkshm mkhal)
-    if(${_flav} STREQUAL xenomai)
-        set_target_properties(ulapi-${_fname} PROPERTIES 
-            COMPILE_FLAGS ${XENO_CFLAGS}
-            LINK_FLAGS ${XENO_LDFLAGS})
-        set(cflags "${cflags} ${XENO_CFLAGS}")
-    endif()
 
     add_library(rtapi_${_fname} SHARED ${RTAPI_SRC} ${${_FLAV}_THREADS_SOURCE})
     set_target_properties(rtapi_${_fname} PROPERTIES 
         COMPILE_DEFINITIONS "RTAPI;THREAD_FLAVOR_ID=${RTAPI_${_FLAV}_ID}"
-        COMPILE_FLAGS "${cflags}"
+        COMPILE_FLAGS "${${_FLAV}_THREADS_RTFLAGS} ${cflags}"
         LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIBEXEC_DIR}/${_fname}
+        LINK_FLAGS "${${_FLAV}_THREADS_LDFLAGS}"
         OUTPUT_NAME "rtapi"
         PREFIX "")
-    if(${_flav} STREQUAL xenomai)
-        set_target_properties(rtapi_${_fname} PROPERTIES 
-            LINK_FLAGS ${XENO_LDFLAGS})
-    endif()
     if(WITH_USERMODE_PCI)
         target_link_libraries(rtapi_${_fname} ${UDEV_LIBRARIES})
     endif()
@@ -93,13 +97,10 @@ foreach(_flav ${BUILD_THREAD_FLAVORS})
         INSTALL_RPATH_USE_LINK_PATH TRUE
         COMPILE_DEFINITIONS RTAPI
         COMPILE_FLAGS -UULAPI
+        LINK_FLAGS "${${_FLAV}_THREADS_LDFLAGS}"
         RUNTIME_OUTPUT_DIRECTORY ${PROJECT_LIBEXEC_DIR})
     target_link_libraries(rtapi_app_${_fname} mk_rip mk_rip.${_fname} mkini 
         mkshm mtalk rtapi_math mk-pb2++ ${CMAKE_DL_LIBS})
-    if(${_flav} STREQUAL xenomai)
-        set_target_properties(rtapi_app_${_fname} PROPERTIES 
-            LINK_FLAGS ${XENO_LDFLAGS})
-    endif()
     cleanup_rpath_hack(rtapi_app_${_fname})
 
     set(SETUID_DEPS ${SETUID_DEPS} rtapi_app_${_fname})

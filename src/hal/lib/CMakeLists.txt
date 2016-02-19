@@ -22,7 +22,7 @@ foreach(_flav ${BUILD_THREAD_FLAVORS})
         $<TARGET_OBJECTS:rtapi_heap>)
     set_target_properties(hal_lib_${_fname} PROPERTIES 
         COMPILE_DEFINITIONS "RTAPI;THREAD_FLAVOR_ID=${RTAPI_${_FLAV}_ID}"
-        COMPILE_FLAGS -UULAPI
+        COMPILE_FLAGS "${${_FLAV}_THREADS_RTFLAGS} -UULAPI"
         LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIBEXEC_DIR}/${_fname}
         OUTPUT_NAME "hal_lib"
         PREFIX "")
