@@ -13,7 +13,7 @@ DEBUG=1
 HAL_SIZE=524288
 
 # Executables
-flavor=@PROJECT_LIBEXEC_DIR@/flavor
+flavor=@PROJECT_BIN_DIR@/flavor
 rtapi_msgd=@PROJECT_LIBEXEC_DIR@/rtapi_msgd
 # rtapi_app should be defined in the appropriate flavor section below
 

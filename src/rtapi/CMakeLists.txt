@@ -35,11 +35,11 @@ set_target_properties(rtapi_msgd PROPERTIES
         "GIT_BUILD_SHA=\"${_out}\";LWS_LIBRARY_VERSION=\"${LWS_VERSION}\""
     RUNTIME_OUTPUT_DIRECTORY ${PROJECT_LIBEXEC_DIR})
 target_link_libraries(rtapi_msgd mtalk mk-pb2++ mkini mkshm)
+_install_exec(rtapi_msgd)
 
 add_executable(flavor flavor.c $<TARGET_OBJECTS:rtapi_compat>)
-set_target_properties(flavor PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${PROJECT_LIBEXEC_DIR})
 target_link_libraries(flavor mkini mkshm)
+_install(flavor)
 
 set(RTAPI_SRC ${XXAPI_COMMON_SRCS} 
     rtapi_main.c rtapi_support.c rtapi_hexdump.c rtapi_compat.c
@@ -116,8 +116,6 @@ add_custom_target(setuid
     DEPENDS ${SETUID_DEPS}
     WORKING_DIRECTORY ${PROJECT_LIBEXEC_DIR}
     VERBATIM)
-
-_install_exec("rtapi_msgd;flavor")
 
 install(FILES rsyslogd-machinekit.conf
     DESTINATION /etc/rsyslog.d
