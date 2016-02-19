@@ -212,7 +212,7 @@ macro(_install_py NAME)
     PATTERN "nosetests" EXCLUDE)
     install(TARGETS ${ARGN}
         DESTINATION share/pyshared/${NAME})
-    set(_setup "${_src}.setup.py")
+    set(_setup "${_src}/setup.py")
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in ${_setup})
     install(CODE "execute_process(COMMAND 
         ${SCRIPTS_DIR}/python_package_helper 
