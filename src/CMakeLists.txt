@@ -50,7 +50,9 @@ if(GIT)
         OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(NOT _out)
         set(_out "non_git_repo")
+        set(GIT_CONFIG_SHA "." PARENT_SCOPE)
     else()
+        set(GIT_CONFIG_SHA ".${_out}" PARENT_SCOPE)
         execute_process(COMMAND git rev-parse --abbrev-ref HEAD
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             OUTPUT_VARIABLE _branch
@@ -59,15 +61,20 @@ if(GIT)
     endif()
 else()
     set(_out "no_git_found")
+    set(GIT_CONFIG_SHA "." PARENT_SCOPE)
 endif()
 if(NOT _branch)
     set(_branch "none")
 endif()
 
-set(PACKAGE_VERSION "${Machinekit_VERSION_MAJOR}.${Machinekit_VERSION_MINOR}")
+set(PACKAGE_VERSION "${MK_VERSION_MAJOR}.${MK_VERSION_MINOR}")
 set(GIT_VERSION "v${PACKAGE_VERSION}~${_branch}~${_out}")
 set(GIT_CONFIG_SHA "${_out}")
 set(GENERIC_LIB_VERSION "${PACKAGE_VERSION}")
+
+# export vars
+set(PACKAGE_VERSION ${PACKAGE_VERSION} PARENT_SCOPE)
+set(GIT_BRANCH ${_branch} PARENT_SCOPE)
 
 if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr")
     add_definitions(-DEMC2_SYSTEM_CONFIG_DIR=\"/etc/machinekit\")

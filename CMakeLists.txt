@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(Machinekit)
-set(Machinekit_VERSION_MAJOR 1)
-set(Machinekit_VERSION_MINOR 0)
+set(MK_VERSION_MAJOR 1)
+set(MK_VERSION_MINOR 0)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
