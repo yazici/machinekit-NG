@@ -41,20 +41,18 @@ set(SRC
     vars_access.c
     vars_names.c)
 
-_to_rtlib(classicladder_rt ${RT_SRC})
-
 add_executable(classicladder ${SRC})
 target_link_libraries(classicladder mkhal ${GTK2_LIBRARIES})
+set_property(TARGET classicladder APPEND PROPERTY 
+COMPILE_DEFINITIONS GTK_INTERFACE GTK2 ULAPI)
+set_property(TARGET classicladder APPEND PROPERTY 
+    INCLUDE_DIRECTORIES "${GTK2_INCLUDE_DIRS}")
+_install(classicladder)
 
+_to_rtlib(classicladder_rt ${RT_SRC})
 foreach(_flav ${BUILD_THREAD_FLAVORS})
     _flavor_helper(${_flav})
     set_property(TARGET classicladder_rt.${_fname} classicladder APPEND PROPERTY
         COMPILE_DEFINITIONS SEQUENTIAL_SUPPORT HAL_SUPPORT DYNAMIC_PLCSIZE
             RT_SUPPORT OLD_TIMERS_MONOS_SUPPORT MODBUS_IO_MASTER)
 endforeach()
-
-set_property(TARGET classicladder APPEND PROPERTY 
-    COMPILE_DEFINITIONS GTK_INTERFACE GTK2)
-set_property(TARGET classicladder APPEND PROPERTY 
-    INCLUDE_DIRECTORIES "${GTK2_INCLUDE_DIRS}")
-_install(classicladder)

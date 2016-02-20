@@ -1,3 +1,4 @@
+add_definitions(-DULAPI)
 if(HAVE_LIBMODBUS)
     add_subdirectory(vfs11_vfd)
     add_subdirectory(vfdb_vfd)

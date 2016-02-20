@@ -1,8 +1,10 @@
 add_executable(halstreamer streamer_usr.c)
+set_target_properties(halstreamer PROPERTIES COMPILE_DEFINITIONS "ULAPI")
 target_link_libraries(halstreamer mkhal)
 _install(halstreamer)
 
 add_executable(halsampler sampler_usr.c)
+set_target_properties(halsampler PROPERTIES COMPILE_DEFINITIONS "ULAPI")
 target_link_libraries(halsampler mkhal)
 _install(halsampler)
 
