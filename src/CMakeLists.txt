@@ -76,14 +76,9 @@ set(GENERIC_LIB_VERSION "${PACKAGE_VERSION}")
 set(PACKAGE_VERSION ${PACKAGE_VERSION} PARENT_SCOPE)
 set(GIT_BRANCH ${_branch} PARENT_SCOPE)
 
-if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr")
-    add_definitions(-DEMC2_SYSTEM_CONFIG_DIR=\"/etc/machinekit\")
-else()
-    add_definitions(-DEMC2_SYSTEM_CONFIG_DIR=\"${CMAKE_INSTALL_PREFIX}/etc/machinekit\")
-endif()
-
-add_definitions(-DULAPI)
 set(NPB_DEFINITIONS PB_FIELD_32BIT PB_SYSTEM_HEADER=<pb-machinekit.h>)
+
+add_definitions(-D_GNU_SOURCE)
 
 add_subdirectory(machinetalk)
 add_subdirectory(libnml)
@@ -97,6 +92,7 @@ foreach(_flav ${BUILD_THREAD_FLAVORS})
     add_dependencies(pbring.${_fname} npb_gen_files)
     add_dependencies(pbmsgs.${_fname} npb_gen_files)
     add_dependencies(ringload.${_fname} npb_gen_files)
+    add_dependencies(hal_lib_${_fname} pb_gen_files)
 endforeach()
 
 # create needed directories

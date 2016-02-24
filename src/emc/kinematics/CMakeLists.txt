@@ -1,6 +1,5 @@
 add_library(cubic OBJECT cubic.c)
 set_target_properties(cubic PROPERTIES
-    COMPILE_FLAGS -UULAPI
     COMPILE_DEFINITIONS "RTAPI;THREAD_FLAVOR_ID=0")
 
 _to_rtlib(trivkins trivkins.c)

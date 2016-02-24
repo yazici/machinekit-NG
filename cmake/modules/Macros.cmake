@@ -126,22 +126,22 @@ endmacro()
 #
 # \arg:NAME library name
 # \arg:SRCS sources
-# \arg:CFLAGS Optional, additional flags
 #
 macro(_to_rtlib NAME SRCS)
     foreach(_flav ${BUILD_THREAD_FLAVORS})
         _flavor_helper(${_flav})
-        set(_cflags -UULAPI)
-        if(${ARGV1})
-            set(_cflags -UULAPI ${ARGV1})
-        endif()
         add_library(${NAME}.${_fname} SHARED ${SRCS})
         set_target_properties(${NAME}.${_fname} PROPERTIES 
             COMPILE_DEFINITIONS "RTAPI;THREAD_FLAVOR_ID=0"
-            COMPILE_FLAGS ${_cflags}
             LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIBEXEC_DIR}/${_fname}
+            LINK_FLAGS "-Wl,--version-script,${NAME}.${_fname}.vers -Bsymbolic"
             OUTPUT_NAME ${NAME}
             PREFIX "")
+        add_custom_command(TARGET ${NAME}.${_fname}
+            PRE_LINK
+            COMMAND ${CMAKE_SOURCE_DIR}/scripts/get_symbols 
+                CMakeFiles/${NAME}.${_fname}.dir/link.txt ${NAME}.${_fname}.vers
+            COMMENT "Extract exported symbols")
         install(TARGETS ${NAME}.${_fname}
             LIBRARY DESTINATION lib/machinekit/${_fname})
     endforeach()
