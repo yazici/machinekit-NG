@@ -40,3 +40,41 @@ include_directories(include/nanopb)
 
 add_subdirectory(src)
 add_subdirectory(scripts)
+
+## copy over headers and sources for use in recompilation of components
+
+file(GLOB headers
+         RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+         "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
+         "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hh" )
+
+file(GLOB pb_headers
+         RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+         "${CMAKE_CURRENT_SOURCE_DIR}/include/nanopb/*.h")
+         
+file(GLOB pci_headers
+         RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+         "${CMAKE_CURRENT_SOURCE_DIR}/include/userpci/*.h")
+         
+file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/include/nanopb")
+file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/include/userpci")
+
+foreach( filename ${headers})
+	file( COPY ${filename} DESTINATION "${PROJECT_BINARY_DIR}/include" )
+endforeach()
+
+foreach( filename ${pb_headers})
+	file( COPY ${filename} DESTINATION "${PROJECT_BINARY_DIR}/include/nanopb")
+endforeach()
+
+foreach( filename ${pci_headers})
+	file( COPY ${filename} DESTINATION "${PROJECT_BINARY_DIR}/include/userpci" )
+endforeach()
+
+file(GLOB icomps
+         RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+         "${CMAKE_CURRENT_SOURCE_DIR}/src/hal/i_components/*.icomp")
+
+foreach( filename ${icomps})
+	file( COPY ${filename} DESTINATION "${PROJECT_BINARY_DIR}/src/hal/i_components" )
+endforeach()
