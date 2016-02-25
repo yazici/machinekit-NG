@@ -73,12 +73,10 @@ target_link_libraries(mkulapi mk_rip mkini mkshm)
 cleanup_rpath_hack(mkulapi)
 _install(mkulapi)
 
-unset(cflags)
 if(WITH_USERMODE_PCI)
     set(RTAPI_SRC ${RTAPI_SRC} rtapi_pci.c)
-    if(UDEV_CFLAGS)
-        set(cflags "${cflags} ${UDEV_CFLAGS}")
-    endif()
+    set(cflags ${UDEV_CFLAGS})
+    set(udev_libs ${UDEV_LIBRARIES})
 endif()
 
 foreach(_flav ${BUILD_THREAD_FLAVORS})
@@ -95,18 +93,17 @@ foreach(_flav ${BUILD_THREAD_FLAVORS})
     target_link_libraries(ulapi-${_fname} mkshm mkhal)
     _install_exec(ulapi-${_fname})
 
-    set(vscript "-Wl,--version-script,rtapi_${_fname}.vers")
+    set(vscript "-Wl,--version-script,rtapi_${_fname}.vers -Wl,--no-as-needed")
     add_library(rtapi_${_fname} SHARED ${RTAPI_SRC} ${${_FLAV}_THREADS_SOURCE})
     set_target_properties(rtapi_${_fname} PROPERTIES 
         COMPILE_DEFINITIONS "RTAPI;THREAD_FLAVOR_ID=${RTAPI_${_FLAV}_ID}"
         COMPILE_FLAGS "${${_FLAV}_THREADS_RTFLAGS} ${cflags}"
         LIBRARY_OUTPUT_DIRECTORY ${PROJECT_LIBEXEC_DIR}/${_fname}
-        LINK_FLAGS "${${_FLAV}_THREADS_LDFLAGS} ${vscript} -Bsymbolic"
+        LINK_FLAGS "${vscript} -Bsymbolic"
         OUTPUT_NAME "rtapi"
         PREFIX "")
-    if(WITH_USERMODE_PCI)
-        target_link_libraries(rtapi_${_fname} ${UDEV_LIBRARIES})
-    endif()
+    target_link_libraries(rtapi_${_fname} ${udev_libs} ${${_FLAV}_THREADS_LDFLAGS})
+
     add_custom_command(TARGET rtapi_${_fname}
         PRE_LINK
         COMMAND ${CMAKE_SOURCE_DIR}/scripts/get_symbols 
