@@ -1,0 +1,11 @@
+# !/bin/bash
+#
+# install_manifest.txt is created when an install is done
+# use it to uninstall too
+
+    exec < ./install_manifest.txt
+		
+    while read LINE ; do
+	rm -f $LINE ;
+    done
+

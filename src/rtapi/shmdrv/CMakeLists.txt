@@ -8,9 +8,9 @@ set_target_properties(mkshm PROPERTIES VERSION ${GENERIC_LIB_VERSION})
 _install(mkshm)
 
 install(FILES shmdrv.rules
-    DESTINATION /etc/udev/rules.d
+    DESTINATION ${INSTALL_SYSCONF_DIR}/udev/rules.d
     RENAME 50-shmdrv.rules)
 
 install(FILES limits.d-machinekit.conf
-    DESTINATION /etc/security/limits.d
+    DESTINATION ${INSTALL_SYSCONF_DIR}/security/limits.d
     RENAME machinekit.conf)

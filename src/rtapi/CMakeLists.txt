@@ -137,5 +137,5 @@ add_custom_target(setuid
     VERBATIM)
 
 install(FILES rsyslogd-machinekit.conf
-    DESTINATION /etc/rsyslog.d
+    DESTINATION ${INSTALL_SYSCONF_DIR}/rsyslog.d
     RENAME machinekit.conf)

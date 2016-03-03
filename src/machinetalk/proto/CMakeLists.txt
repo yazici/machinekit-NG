@@ -40,7 +40,9 @@ foreach(file ${MK_PROTO_SRC})
         OUTPUT  ${PB_GEN_DIR}/${out}
         COMMAND ${PROTOC} ${PB_GEN_OPTS} proto/${file}.proto
         COMMAND ${CMAKE_COMMAND} -E remove -f ${INCLUDE_DIR}/${file}.pb.h
-        COMMAND ${CMAKE_COMMAND} -E create_symlink 
+# don't want a symlink or install will copy that and depend upon the source being available
+#        COMMAND ${CMAKE_COMMAND} -E create_symlink 
+	COMMAND ${CMAKE_COMMAND} -E copy
             ${PB_GEN_DIR}/${file}.pb.h 
             ${INCLUDE_DIR}/${file}.pb.h
         DEPENDS proto/${file}.proto
@@ -80,7 +82,9 @@ foreach(file ${MK_PROTO_SRC})
         OUTPUT  ${PB_GEN_DIR}/${out}
         COMMAND ${PROTOC} ${NPB_GEN_OPTS} proto/${file}.proto
         COMMAND ${CMAKE_COMMAND} -E remove -f ${INCLUDE_DIR}/${file}.npb.h
-        COMMAND ${CMAKE_COMMAND} -E create_symlink 
+# don't want a symlink or install will copy that and depend upon the source being available
+#        COMMAND ${CMAKE_COMMAND} -E create_symlink 
+	COMMAND ${CMAKE_COMMAND} -E copy
             ${PB_GEN_DIR}/${file}.npb.h 
             ${INCLUDE_DIR}/${file}.npb.h
         DEPENDS proto/${file}.proto protoc-gen-nanopb 
