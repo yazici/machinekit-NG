@@ -3,11 +3,11 @@ This repo contains a testing version of Machinekit, with only HAL elements prese
 Subject to unnotified change or deletion.
 
 To build:
-(items in [] are optional)
+(items in `[]` are optional)
 
 cd build
 
-cmake ../ [-DCMAKE_INSTALL_DIR=/path/to/install/to]  (defaults to /usr/local)
+cmake ../ `[-DCMAKE_INSTALL_PREFIX=/path/to/install/to]`  (defaults to /usr/local)
 
 make -j${nproc}
 
@@ -19,8 +19,8 @@ cd ../
 
 Alternately, from the 'build' dir
 
-[make install]
+`[make install]`
 
 Once installed there is an option to uninstall, so long as you do not clean the repo
 
-[./uninstall]
+`[./uninstall]`
