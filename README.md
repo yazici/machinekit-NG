@@ -2,25 +2,36 @@ This repo contains a testing version of Machinekit, with only HAL elements prese
 
 Subject to unnotified change or deletion.
 
-To build:
-(items in `[]` are optional)
+To build a RIP:
+~~~~~~~~~~~~~~~
 
-cd build
+$ cd build
 
-cmake ../ `[-DCMAKE_INSTALL_PREFIX=/path/to/install/to]`  (defaults to /usr/local)
+$ cmake ../ 
 
-make -j${nproc}
+$ make -j${nproc}
 
-make setuid
+$ make setuid
 
-cd ../
+$ cd ../
 
-. ./scripts/rip-environment
+$ . ./scripts/rip-environment
 
-Alternately, from the 'build' dir
+Alternately to build to install:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`[make install]`
+from the 'build' dir
 
-Once installed there is an option to uninstall, so long as you do not clean the repo
+$ cmake ../ -DINSTALL_PREFIX=/path/to/install/to
 
-`[./uninstall]`
+$ make -j${nproc}
+
+$ make setuid
+
+$ make install
+
+Once installed there is an option to uninstall from build/, so long as you do not clean the repo
+because it uses cmake install manifest
+
+$ ./uninstall
+

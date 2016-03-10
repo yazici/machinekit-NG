@@ -19,7 +19,9 @@ rtapi_msgd=@PROJECT_LIBEXEC_DIR@/rtapi_msgd
 
 # directory paths
 EMC2_HOME=@PROJECT_BINARY_DIR@
-RTLIB_DIR=@PROJECT_LIBEXEC_DIR@
+
+RTLIB_DIR=@CMAKE_INSTALL_PREFIX@/lib/machinekit
+
 LIBEXEC_DIR=@PROJECT_LIBEXEC_DIR@
 BIN_DIR=@PROJECT_BIN_DIR@
 
@@ -39,6 +41,7 @@ PIDOF=@PIDOF@
 rtapi_app=@PROJECT_LIBEXEC_DIR@/rtapi_app_posix
 RTS=
 RTDIR=
+RTLIB_DIR=@CMAKE_INSTALL_PREFIX@/lib/machinekit
 MODULES=
 
 #################################################
@@ -49,6 +52,7 @@ MODULES=
 rtapi_app=@PROJECT_LIBEXEC_DIR@/rtapi_app_rt-preempt
 RTS=
 RTDIR=
+RTLIB_DIR=@CMAKE_INSTALL_PREFIX@/lib/machinekit
 MODULES=
 
 #################################################
@@ -59,4 +63,5 @@ MODULES=
 rtapi_app=@PROJECT_LIBEXEC_DIR@/rtapi_app_xenomai
 RTS=@XENO_CONFIG@ --skin=@XENOMAI_SKIN@
 RTDIR=
+RTLIB_DIR=@CMAKE_INSTALL_PREFIX@/lib/machinekit
 MODULES=

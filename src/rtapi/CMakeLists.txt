@@ -57,6 +57,12 @@ set_target_properties(flavor PROPERTIES COMPILE_DEFINITIONS "ULAPI")
 target_link_libraries(flavor mkini mkshm)
 _install(flavor)
 
+add_executable(chkenv chkenv.c)
+#set_target_properties(chkenv)
+target_link_libraries(chkenv)
+_install(chkenv)
+
+
 set(RTAPI_SRC rtapi_support.c ${XXAPI_COMMON_SRCS} 
     rtapi_heap.c rtapi_main.c  rtapi_hexdump.c rtapi_compat.c
     $<TARGET_OBJECTS:nanopb>)

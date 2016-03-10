@@ -13,28 +13,26 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
-MESSAGE(DBG " Before evaluation CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
+MESSAGE(DBG " INSTALL_PREFIX = ${INSTALL_PREFIX}")
 
-if(CMAKE_INSTALL_PREFIX AND EXISTS "${CMAKE_INSTALL_PREFIX}" AND IS_DIRECTORY "${CMAKE_INSTALL_PREFIX}")
+## CMAKE_INSTALL_PREFIX will be set to /usr/local whether the user has set it or not
+## therefore use a different define to properly test if a RIP or user install
+
+if(INSTALL_PREFIX AND EXISTS "${INSTALL_PREFIX}" AND IS_DIRECTORY "${INSTALL_PREFIX}")
     set(RUN_IN_PLACE "no")
-    MESSAGE(" Building for installation to ${CMAKE_INSTALL_PREFIX} ")
-    if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr")
+    MESSAGE("********** Building for installation to ${INSTALL_PREFIX} ***********")
+    if("${INSTALL_PREFIX}" STREQUAL "/usr")
         set(INSTALL_SYSCONF_DIR "/etc")
     else()
-        set(INSTALL_SYSCONF_DIR "${CMAKE_INSTALL_PREFIX}/etc")
+        set(INSTALL_SYSCONF_DIR "${INSTALL_PREFIX}/etc")
     endif()
+    set(CMAKE_INSTALL_PREFIX ${INSTALL_PREFIX})
 else()
     set(RUN_IN_PLACE "yes")
+    MESSAGE("********** Building as Run In Place ***********")
+    set(INSTALL_SYSCONF_DIR "${PROJECT_BINARY_DIR}/etc")
     set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR})
-#    MESSAGE("${CMAKE_INSTALL_PREFIX} specified does not exist or is not a directory")
-#    endif()
-#else()
-#    set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR})
-#    set(RUN_IN_PLACE "yes")
 endif()
-
-# we build in the repo tree for everything, then copy elsewhere for install or deb
-#set(PROJECT_EMC2_HOME ${CMAKE_SOURCE_DIR})
 
 MESSAGE(DBG " CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
 MESSAGE(DBG " RUN_IN_PLACE = ${RUN_IN_PLACE}")
@@ -55,6 +53,7 @@ set(INCLUDE_DIR ${PROJECT_BINARY_DIR}/include)
 set(INSTALL_PYSHARED_DIR ${CMAKE_INSTALL_PREFIX}/share/pyshared)
 set(SCRIPTS_DIR ${CMAKE_SOURCE_DIR}/scripts)
 
+##set(BUILD_SYS "user-dso")
 
 include(Dependencies)
 include(Options)

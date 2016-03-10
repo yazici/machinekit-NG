@@ -114,8 +114,11 @@ else
     complete -C "halcmd -C" halcmd
 fi
 
-#if [ -f $PROJECT_BINARY_DIR/src/Makefile ]; then
-#    build () { make -C $PROJECT_BINARY_DIR/src "$@"; }
-#fi
+RTAPI_INI=@PROJECT_BINARY_DIR@/etc/machinekit/rtapi.ini
 
-export PYTHONPATH MANPATH LD_LIBRARY_PATH TCLLIBPATH GLADE_CATALOG_PATH
+export PYTHONPATH MANPATH LD_LIBRARY_PATH TCLLIBPATH GLADE_CATALOG_PATH RTAPI_INI
+
+## must be after RTAPI_INI is exported or flavor will not work
+export BUILD_SYS=$(flavor -b)
+export FLAVOR=$(flavor)
+export FLAVOR_ID=$(flavor -d)

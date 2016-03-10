@@ -242,26 +242,25 @@ flavor_ptr default_flavor(void)
 {
     char *fname = getenv("FLAVOR");
     flavor_ptr f, flavor;
-
-    if (fname) {
-	if ((flavor = flavor_byname(fname)) == NULL) {
-	    fprintf(stderr, 
-		    "FLAVOR=%s: no such flavor -- valid flavors are:\n",
-		    fname);
+    // if switching between RIP and install, can have blank env vars in ~/.bashrc
+    // so check it is set to something if it exists
+    if(fname != NULL){
+	if(strlen(fname)){
+	    if ((flavor = flavor_byname(fname)) == NULL) {
+	    fprintf(stderr,  "FLAVOR=%s: no such flavor -- valid flavors are:\n", fname);
 	    f = flavors;
-	    while (f->name) {
+	    while (f->name){
 		fprintf(stderr, "\t%s\n", f->name);
-		f++;
-	    }
+		f++;} 
 	    exit(1);
-	}
+	    }
 	/* make sure corresponding rtapi lib is also present */
 	if (check_rtapi_lib(fname))
 	    return flavor;
 	else
 	    exit(1);
+	}
     }
-
     if (kernel_is_rtai()) {
 	f = flavor_byid(RTAPI_RTAI_KERNEL_ID); 
 	if (check_rtapi_lib((char *)f->name))
@@ -281,6 +280,8 @@ flavor_ptr default_flavor(void)
 	f = flavor_byid(RTAPI_RT_PREEMPT_ID); 
 	if (check_rtapi_lib((char *)f->name))
 	    return f;
+	else
+	    fprintf(stderr, "rtai lib not found for\t%s\n", f->name);
     }
     return flavor_byid(RTAPI_POSIX_ID);
 }
@@ -365,7 +366,7 @@ int check_rtapi_lib(char *name)
     }
 
     snprintf(fname, PATH_MAX,"%s/ulapi-%s.so", val, name);
-
+	// DEBUG PATH fprintf(stderr, "Checking path %s for rtapi lib\n", fname);
     /* check if rtapi lib exists */
     return (stat(fname, &sb) == 0);
 }

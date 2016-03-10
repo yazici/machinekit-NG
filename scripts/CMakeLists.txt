@@ -9,12 +9,12 @@ configure_file("rip-environment.in" "${SCRIPTS_DIR}/rip-environment" @ONLY)
 # create exec
 foreach(tool realtime halrun)
     add_custom_command(
-        OUTPUT ${PROJECT_BIN_DIR}/${tool} 
-        COMMAND cmake -E copy ${tool} ${PROJECT_BIN_DIR}/${tool}
-        COMMAND chmod 0755 ${PROJECT_BIN_DIR}/${tool}
+        OUTPUT ${PROJECT_BINARY_DIR}/${tool} 
+        COMMAND cmake -E copy ${tool} ${PROJECT_BINARY_DIR}/${tool}
+        COMMAND chmod 0755 ${PROJECT_BINARY_DIR}/${tool}
         DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${tool}
             ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.in)
-    add_custom_target(${tool} ALL DEPENDS ${PROJECT_BIN_DIR}/${tool})
+    add_custom_target(${tool} ALL DEPENDS ${PROJECT_BINARY_DIR}/${tool})
 endforeach()
 
 # create files for installation
