@@ -20,8 +20,8 @@ char *build_sys = NULL;
 	FILE *fp;
 	fp = fopen((const char *) path, "a+");
 	flavour = getenv ("FLAVOR");
-	    // check also if env var has been set, but contains nothing save maybe CR
-	    // occurs if .bashrc has `export FLAVOR=$(flavor)` say, but flavor not built yet
+	    // check also if env var has been set, but contains nothing except maybe CR
+	    // occurs if .bashrc has `export FLAVOR=$(flavor)` say, but flavor binary not built yet
 	if (flavour == NULL || (flavour != NULL && strlen(flavour) < 2))
 		fprintf(fp, "\nexport FLAVOR=$(echo $(flavor))\n");
 		
