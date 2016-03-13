@@ -21,7 +21,7 @@ MESSAGE(DBG " INSTALL_PREFIX = ${INSTALL_PREFIX}")
 if(INSTALL_PREFIX AND EXISTS "${INSTALL_PREFIX}" AND IS_DIRECTORY "${INSTALL_PREFIX}")
     set(RUN_IN_PLACE "no")
     MESSAGE("********** Building for installation to ${INSTALL_PREFIX} ***********")
-    # always put SYSCONF stuf in /etc, MK won't look anywhere else
+    # always put SYSCONF stuff in /etc, MK won't look anywhere else
     set(INSTALL_SYSCONF_DIR "/etc")
     set(CMAKE_INSTALL_PREFIX ${INSTALL_PREFIX})
 else()
@@ -61,15 +61,15 @@ add_subdirectory(src)
 add_subdirectory(scripts)
 
 install(DIRECTORY ${PROJECT_BINARY_DIR}/include/
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/machinekit
 	FILES_MATCHING PATTERN "*.h" PATTERN "*.hh")
 	
 install(DIRECTORY ${PROJECT_BINARY_DIR}/include/nanopb/ 
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/nanopb
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/machinekit/nanopb
 	FILES_MATCHING PATTERN "*.h" PATTERN "*.hh")
 
 install(DIRECTORY ${PROJECT_BINARY_DIR}/include/userpci/ 
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/userpci
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/machinekit/userpci
 	FILES_MATCHING PATTERN "*.h" PATTERN "*.hh")
 
 install(DIRECTORY ${PROJECT_BINARY_DIR}/src/hal/i_components/ 

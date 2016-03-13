@@ -1,0 +1,16 @@
+This Debian packaging must first be configured before building.
+
+By default, all threads are disabled; package builders MUST enable
+thread package builds by adding flags to the debian/configure command
+line.  See `debian/configure -h` for details.
+
+eg.
+
+cd to the root dir of the repo
+
+debian/configure -p -r  ( configure for posix and rt-preempt )
+
+debian/rules
+
+DEBIAN_KERNEL_JOBS=${nproc} fakeroot debian/rules binary
+
