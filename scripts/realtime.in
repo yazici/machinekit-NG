@@ -3,18 +3,18 @@
 
 # Basic variables
 export LANG=C
-INIVAR=@PROJECT_LIBEXEC_DIR@/inivar
+INIVAR=@INSTALL_PREFIX@/lib/machinekit/inivar
 PIDOF=@PIDOF@
 
 # if not overridden by user, point RTAPI_INI to installed default:
 if [ -z "$RTAPI_INI" ]; then
-    RTAPI_INI=@PROJECT_SYSCONF_DIR@/machinekit/rtapi.ini
+    RTAPI_INI=@INSTALL_SYSCONF_DIR@/machinekit/rtapi.ini
 fi
 export RTAPI_INI
 
 # if not overridden by user, point MACHINEKIT_INI to installed default:
 if [ -z "$MACHINEKIT_INI" ]; then
-    MACHINEKIT_INI=@PROJECT_SYSCONF_DIR@/machinekit/machinekit.ini
+    MACHINEKIT_INI=@INSTALL_SYSCONF_DIR@/machinekit/machinekit.ini
 fi
 export MACHINEKIT_INI
 

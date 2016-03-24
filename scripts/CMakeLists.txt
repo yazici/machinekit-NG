@@ -4,17 +4,17 @@ configure_file("machinekit.ini.in"
     "${PROJECT_SYSCONF_DIR}/machinekit/machinekit.ini" @ONLY)
 configure_file("realtime.in" "realtime" @ONLY)
 configure_file("halrun.in" "halrun" @ONLY)
-configure_file("set_env.in" "${PROJECT_BIN_DIR}/set_env" @ONLY)
+configure_file("rip-environment.in" "${SCRIPTS_DIR}/rip-environment" @ONLY)
 
 # create exec
 foreach(tool realtime halrun)
     add_custom_command(
-        OUTPUT ${PROJECT_BIN_DIR}/${tool} 
-        COMMAND cmake -E copy ${tool} ${PROJECT_BIN_DIR}/${tool}
-        COMMAND chmod 0755 ${PROJECT_BIN_DIR}/${tool}
+        OUTPUT ${PROJECT_BINARY_DIR}/${tool} 
+        COMMAND cmake -E copy ${tool} ${PROJECT_BINARY_DIR}/${tool}
+        COMMAND chmod 0755 ${PROJECT_BINARY_DIR}/${tool}
         DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${tool}
             ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.in)
-    add_custom_target(${tool} ALL DEPENDS ${PROJECT_BIN_DIR}/${tool})
+    add_custom_target(${tool} ALL DEPENDS ${PROJECT_BINARY_DIR}/${tool})
 endforeach()
 
 # create files for installation
@@ -37,9 +37,9 @@ install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/halrun.dist
     RENAME halrun)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/rtapi.ini.dist 
-    DESTINATION /etc/machinekit
+    DESTINATION ${INSTALL_SYSCONF_DIR}/machinekit
     RENAME rtapi.ini)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/machinekit.ini.dist 
-    DESTINATION /etc/machinekit
+    DESTINATION ${INSTALL_SYSCONF_DIR}/machinekit
     RENAME machinekit.ini)

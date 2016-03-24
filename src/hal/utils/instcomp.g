@@ -19,7 +19,7 @@
 #    Adapted and rewritten in part for instantiatable components
 #    ArcEye March 2015 <arceyeATmgwareDOTcoDOTuk>
 
-import os, sys, tempfile, shutil, getopt, time, re
+import os, sys, tempfile, shutil, getopt, time, re, subprocess
 BASE = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
 sys.path.insert(0, os.path.join(BASE, "lib", "python"))
 
@@ -901,7 +901,8 @@ def find_modinc():
     global modinc
     if modinc: return modinc
     d = os.path.abspath(os.path.dirname(os.path.dirname(sys.argv[0])))
-    for e in ['src', 'etc/linuxcnc', '/etc/linuxcnc', 'share/linuxcnc']:
+     # the only places it should be in this context
+    for e in ['etc/machinekit', '/etc/machinekit', '/usr/local/etc/machinekit']:
         e = os.path.join(d, e, 'Makefile.modinc')
         if os.path.exists(e):
             modinc = e
@@ -909,6 +910,14 @@ def find_modinc():
     raise SystemExit, "Error: Unable to locate Makefile.modinc"
 
 def build_rt(tempdir, filename, mode, origfilename):
+    # first check we have the right environment for makefile.modinc
+    retval = subprocess.call("chkenv")
+    if retval != 0:
+	raise SystemExit, """
+	Error: Your shell environment is incomplete.
+	The correct paths have been added to ~/.bashrc.
+	Run 'source ~/.bashrc' in this terminal and then try again."""
+	
     objname = os.path.basename(os.path.splitext(filename)[0] + ".o")
     makefile = os.path.join(tempdir, "Makefile")
     f = open(makefile, "w")

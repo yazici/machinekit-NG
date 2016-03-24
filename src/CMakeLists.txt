@@ -20,16 +20,24 @@ set(RTAPI_POSIX_NAME "posix")
 set(POSIX_THREADS_SOURCE "rt-preempt.c")
 set(POSIX_THREADS_RTFLAGS "-pthread")
 set(POSIX_THREADS_LDFLAGS "-lpthread -lrt")
+set(POSIX_THREADS_BUILD_SYS "user-dso")
 set(RTAPI_RT_PREEMPT_ID 1)
 set(RTAPI_RT_PREEMPT_NAME "rt-preempt")
 set(RT_PREEMPT_THREADS_SOURCE "rt-preempt.c")
 set(RT_PREEMPT_THREADS_RTFLAGS "-pthread")
 set(RT_PREEMPT_THREADS_LDFLAGS "-lpthread -lrt")
+set(RT_PREEMPT_THREADS_BUILD_SYS "user-dso")
 set(RTAPI_XENOMAI_ID 2)
 set(RTAPI_XENOMAI_NAME "xenomai")
 set(XENOMAI_THREADS_SOURCE xenomai.c)
 set(XENOMAI_THREADS_RTFLAGS ${XENO_CFLAGS})
 set(XENOMAI_THREADS_LDFLAGS ${XENO_LDFLAGS})
+set(XENOMAI_THREADS_BUILD_SYS "user-dso")
+
+set(BUILD_DRIVERS "yes")
+set(CC "gcc")
+set(LD "ld")
+set(OBJCOPY "objcopy")
 
 include(RpathHack)
 
@@ -106,3 +114,7 @@ configure_file(
     "${PROJECT_SOURCE_DIR}/src/config.h.in"
     "${PROJECT_BINARY_DIR}/include/config.h"
     @ONLY)
+
+configure_file("Makefile.modinc.in" "${INSTALL_SYSCONF_DIR}/machinekit/Makefile.modinc" @ONLY)
+configure_file("Makefile.inc.in" "${INSTALL_SYSCONF_DIR}/machinekit/Makefile.inc" @ONLY)
+
